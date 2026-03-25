@@ -104,6 +104,57 @@ internal static class Hex1bAutomatorTestHelpers
     }
 
     /// <summary>
+    /// Iterates through the options and stops when a matching option is selected.
+    /// </summary>
+    internal static async Task SearchAndSelectOptionAsync(
+        this Hex1bTerminalAutomator auto,
+        string searchedOption,
+        string selectionIndicator = "> ",
+        bool autoEnter = false,
+        string? description = null,
+        TimeSpan? timeout = null)
+    {
+        if (string.IsNullOrWhiteSpace(selectionIndicator))
+        {
+            throw new ArgumentException(
+                $"Empty {nameof(selectionIndicator)} means selected item cannot be distiguished from unselected items.");
+        }
+
+        // Generous total timeout to allow for all options to be iterated.
+        var effectiveTimeout = timeout ?? TimeSpan.FromSeconds(30);
+
+        var selectedOption = $"{selectionIndicator}{searchedOption}";
+        var selectedOptionSearchTask = auto.WaitUntilAsync(
+            s => new CellPatternSearcher().Find(selectedOption).Search(s).Count > 0,
+            description: description,
+            timeout: effectiveTimeout
+        );
+
+        // Send 'Down' keycodes with small delays to iterate the options.
+        // All while the search task is still running, to detect the selected item.
+        while (!selectedOptionSearchTask.IsCompleted)
+        {
+            await auto.DownAsync();
+
+            // Small delay to allow the console to fully render.
+            await Task.Delay(TimeSpan.FromMilliseconds(250));
+
+            // Search task is cancelled from an actual timeout.
+            // This most likely means the searched option was not found.
+            if (selectedOptionSearchTask.IsFaulted)
+            {
+                break;
+            }
+        }
+
+        // Searched option was found.
+        if (selectedOptionSearchTask.Status == TaskStatus.RanToCompletion && autoEnter)
+        {
+            await auto.EnterAsync();
+        }
+    }
+
+    /// <summary>
     /// Handles the agent init confirmation prompt that appears after aspire init/new,
     /// then waits for the shell success prompt. Supports CLI versions with and without agent init chaining.
     /// </summary>
