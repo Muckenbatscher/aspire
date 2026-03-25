@@ -37,10 +37,11 @@ public sealed class TypeScriptPolyglotTests(ITestOutputHelper output)
         await auto.TypeAsync("aspire init");
         await auto.EnterAsync();
         await auto.WaitUntilTextAsync("Which language would you like to use?", timeout: TimeSpan.FromSeconds(30));
-        // Navigate down to "TypeScript (Node.js)" which is the 2nd option
-        await auto.DownAsync();
-        await auto.WaitUntilTextAsync("> TypeScript (Node.js)", timeout: TimeSpan.FromSeconds(5));
-        await auto.EnterAsync(); // select TypeScript
+        // select TypeScript
+        await auto.SearchAndSelectOptionAsync(
+            searchedOption: "TypeScript (Node.js)",
+            autoEnter: true,
+            timeout: TimeSpan.FromSeconds(5));
         await auto.WaitUntilTextAsync("Created apphost.ts", timeout: TimeSpan.FromMinutes(2));
         await auto.DeclineAgentInitPromptAsync(counter);
 

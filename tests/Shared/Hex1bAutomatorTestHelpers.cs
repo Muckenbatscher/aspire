@@ -237,58 +237,38 @@ internal static class Hex1bAutomatorTestHelpers
                 break;
 
             case AspireTemplate.JsReact:
-                await auto.DownAsync();
-                await auto.WaitUntilAsync(
-                    s => new CellPatternSearcher().Find("> Starter App (ASP.NET Core/React)").Search(s).Count > 0,
-                    timeout: TimeSpan.FromSeconds(5),
+                await auto.SearchAndSelectOptionAsync(
+                    searchedOption: "Starter App (ASP.NET Core/React)",
+                    autoEnter: true,
                     description: "JS React template selected");
-                await auto.EnterAsync();
                 break;
 
             case AspireTemplate.ExpressReact:
-                await auto.DownAsync();
-                await auto.DownAsync();
-                await auto.WaitUntilAsync(
-                    s => new CellPatternSearcher().Find("> Starter App (Express/React)").Search(s).Count > 0,
-                    timeout: TimeSpan.FromSeconds(5),
+                await auto.SearchAndSelectOptionAsync(
+                    searchedOption: "Starter App (Express/React)",
+                    autoEnter: true,
                     description: "Express React template selected");
-                await auto.EnterAsync();
                 break;
 
             case AspireTemplate.PythonReact:
-                await auto.DownAsync();
-                await auto.DownAsync();
-                await auto.DownAsync();
-                await auto.WaitUntilAsync(
-                    s => new CellPatternSearcher().Find("> Starter App (FastAPI/React)").Search(s).Count > 0,
-                    timeout: TimeSpan.FromSeconds(5),
+                await auto.SearchAndSelectOptionAsync(
+                    searchedOption: "Starter App (FastAPI/React)",
+                    autoEnter: true,
                     description: "Python React template selected");
-                await auto.EnterAsync();
                 break;
 
             case AspireTemplate.EmptyAppHost:
-                await auto.DownAsync();
-                await auto.DownAsync();
-                await auto.DownAsync();
-                await auto.DownAsync();
-                await auto.WaitUntilAsync(
-                    s => new CellPatternSearcher().Find("> Empty (C# AppHost)").Search(s).Count > 0,
-                    timeout: TimeSpan.FromSeconds(5),
+                await auto.SearchAndSelectOptionAsync(
+                    searchedOption: "Empty (C# AppHost)",
+                    autoEnter: true,
                     description: "Empty AppHost template selected");
-                await auto.EnterAsync();
                 break;
 
             case AspireTemplate.TypeScriptEmptyAppHost:
-                await auto.DownAsync();
-                await auto.DownAsync();
-                await auto.DownAsync();
-                await auto.DownAsync();
-                await auto.DownAsync();
-                await auto.WaitUntilAsync(
-                    s => new CellPatternSearcher().Find("> Empty (TypeScript AppHost)").Search(s).Count > 0,
-                    timeout: TimeSpan.FromSeconds(5),
+                await auto.SearchAndSelectOptionAsync(
+                    searchedOption: "Empty (TypeScript AppHost)",
+                    autoEnter: true,
                     description: "TypeScript Empty AppHost template selected");
-                await auto.EnterAsync();
                 break;
 
             default:
