@@ -224,16 +224,15 @@ internal static class Hex1bAutomatorTestHelpers
         // Step 1: Type aspire new and wait for the template list
         await auto.TypeAsync("aspire new");
         await auto.EnterAsync();
-        await auto.WaitUntilAsync(
-            s => new CellPatternSearcher().Find("> Starter App").Search(s).Count > 0,
-            timeout: templateTimeout,
-            description: "template selection list (> Starter App)");
 
         // Step 2: Navigate to and select the desired template
         switch (template)
         {
             case AspireTemplate.Starter:
-                await auto.EnterAsync(); // First option, no navigation needed
+                await auto.SearchAndSelectOptionAsync(
+                    searchedOption: "Starter App",
+                    autoEnter: true,
+                    description: "Starter template selected");
                 break;
 
             case AspireTemplate.JsReact:
@@ -259,9 +258,20 @@ internal static class Hex1bAutomatorTestHelpers
 
             case AspireTemplate.EmptyAppHost:
                 await auto.SearchAndSelectOptionAsync(
-                    searchedOption: "Empty (C# AppHost)",
+                    searchedOption: "Empty AppHost",
                     autoEnter: true,
                     description: "Empty AppHost template selected");
+                try
+                {
+                    await auto.WaitUntilAsync(
+                        s => new CellPatternSearcher().Find("Which language would you like to use?").Search(s).Count > 0,
+                        timeout: TimeSpan.FromSeconds(5),
+                        description: "AppHost language prompt");
+                    await auto.EnterAsync();
+                }
+                catch (Hex1bAutomationException) // CLI did not prompt for a language because it was found in the local config file
+                {
+                }
                 break;
 
             case AspireTemplate.TypeScriptEmptyAppHost:
@@ -269,6 +279,13 @@ internal static class Hex1bAutomatorTestHelpers
                     searchedOption: "Empty (TypeScript AppHost)",
                     autoEnter: true,
                     description: "TypeScript Empty AppHost template selected");
+                break;
+
+            case AspireTemplate.JavaEmptyAppHost:
+                await auto.SearchAndSelectOptionAsync(
+                    searchedOption: "Empty (Java AppHost)",
+                    autoEnter: true,
+                    description: "Java Empty AppHost template selected");
                 break;
 
             default:
