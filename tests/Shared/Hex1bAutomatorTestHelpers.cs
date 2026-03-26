@@ -134,17 +134,25 @@ internal static class Hex1bAutomatorTestHelpers
         // All while the search task is still running, to detect the selected item.
         while (!selectedOptionSearchTask.IsCompleted)
         {
-            await auto.DownAsync();
-
             // Small delay to allow the console to fully render.
+            // Also wait before the first 'Down' to not accidentally skip over the first option.
+            // To not accidentally skip it, in the case that the first item is the searched one.
             await Task.Delay(TimeSpan.FromMilliseconds(250));
 
-            // Search task is cancelled from an actual timeout.
-            // This most likely means the searched option was not found.
-            if (selectedOptionSearchTask.IsFaulted)
+            // Selected option found or timeout reached in the meantime.
+            if (selectedOptionSearchTask.IsCompleted)
             {
                 break;
             }
+
+            await auto.DownAsync();
+        }
+
+        if (selectedOptionSearchTask.IsFaulted)
+        {
+            // Throw the exception that caused the search task to fail.
+            // Most likely a timeout becuase the searched option was not found. 
+            await selectedOptionSearchTask;
         }
 
         // Searched option was found.
