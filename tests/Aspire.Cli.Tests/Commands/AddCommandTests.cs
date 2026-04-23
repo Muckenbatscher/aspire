@@ -1649,7 +1649,7 @@ public class AddCommandFuzzySearchTests(ITestOutputHelper outputHelper)
 
         Assert.Equal(ExitCodeConstants.FailedToAddPackage, exitCode);
         Assert.False(addPackageWasCalled);
-        Assert.Contains(testInteractionService.DisplayedErrors, error => error.Contains("postgre", StringComparison.Ordinal));
+        Assert.Contains(string.Format(AddCommandStrings.SpecifiedVersionRequiresExactPackageMatch, "postgre"), testInteractionService.DisplayedErrors);
     }
 
     [Fact]
@@ -1701,7 +1701,7 @@ public class AddCommandFuzzySearchTests(ITestOutputHelper outputHelper)
 
         Assert.Equal(ExitCodeConstants.FailedToAddPackage, exitCode);
         Assert.False(addPackageWasCalled);
-        Assert.Contains(testInteractionService.DisplayedErrors, error => error.Contains("nonexistentpackage", StringComparison.Ordinal));
+        Assert.Contains(string.Format(AddCommandStrings.SpecifiedVersionRequiresExactPackageMatch, "nonexistentpackage"), testInteractionService.DisplayedErrors);
     }
 
     [Fact]

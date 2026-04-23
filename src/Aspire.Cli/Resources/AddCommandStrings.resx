@@ -178,7 +178,7 @@
     <comment>{0} is the package name, {1} is the requested version.</comment>
   </data>
   <data name="SpecifiedVersionRequiresExactPackageMatch" xml:space="preserve">
-    <value>When --version is specified, the integration name must exactly match a package or friendly name. No exact match was found for '{0}'.</value>
+    <value>When --version is specified in non-interactive mode, the integration name must exactly match a package or friendly name. No exact match was found for '{0}'.</value>
     <comment>{0} is the integration name provided by the user.</comment>
   </data>
   <data name="UsePrereleasePackages" xml:space="preserve">
